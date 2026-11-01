@@ -40,6 +40,8 @@ class MainActivity : Activity() {
     private lateinit var d1: DialDigit
     private lateinit var d2: DialDigit
     private var wallIdx = 0
+    private var videoOn = false
+    private var vid: android.widget.VideoView? = null
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 
@@ -66,6 +68,22 @@ class MainActivity : Activity() {
         wallA = ImageView(this).apply { scaleType = ImageView.ScaleType.CENTER_CROP }
         wallB = ImageView(this).apply { scaleType = ImageView.ScaleType.CENTER_CROP; alpha = 0f }
         root.addView(wallA, M, M); root.addView(wallB, M, M)
+        val vf = File(getExternalFilesDir(null), "video/bg.mp4")
+        if (vf.exists()) {
+            val vv = android.widget.VideoView(this)
+            vid = vv
+            root.addView(vv, FrameLayout.LayoutParams(M, M))
+            vv.setVideoPath(vf.path)
+            vv.setOnPreparedListener { mp ->
+                mp.isLooping = true
+                mp.setVolume(0f, 0f)
+                try { mp.setVideoScalingMode(android.media.MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING) } catch (e: Exception) {}
+            }
+            vv.start()
+            wallA.visibility = View.GONE
+            wallB.visibility = View.GONE
+            videoOn = true
+        }
         val dim = View(this).apply {
             background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
                 intArrayOf(0x33000000, 0x00000000, 0xDD000000.toInt()))
@@ -120,7 +138,7 @@ class MainActivity : Activity() {
 
     override fun onStart() { super.onStart(); registerReceiver(screenOn, IntentFilter(Intent.ACTION_SCREEN_ON)) }
     override fun onStop() { unregisterReceiver(screenOn); super.onStop() }
-    override fun onResume() { super.onResume(); h.post(tick); h.post(wallLoop) }
+    override fun onResume() { super.onResume(); h.post(tick); h.post(wallLoop); vid?.start() }
     override fun onPause() { h.removeCallbacks(tick); h.removeCallbacks(wallLoop); super.onPause() }
     override fun onBackPressed() {}
 
@@ -186,7 +204,9 @@ class MainActivity : Activity() {
         startActivity(i, ActivityOptions.makeScaleUpAnimation(v, 0, 0, v.width, v.height).toBundle())
     }
 
+
     private fun nextWall() {
+        if (videoOn) return
         val dir = File(getExternalFilesDir(null), "wallpapers").apply { mkdirs() }
         val fs = dir.listFiles()?.filter { it.extension.lowercase() in listOf("jpg", "jpeg", "png", "webp") }
             ?.sortedBy { it.name } ?: return
