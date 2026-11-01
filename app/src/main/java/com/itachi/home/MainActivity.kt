@@ -84,7 +84,7 @@ class MainActivity : Activity() {
         root.addView(glow, FrameLayout.LayoutParams(dp(700), dp(700)))
 
         eyes = EyesView(this)
-        root.addView(eyes, FrameLayout.LayoutParams(dp(320), dp(90), Gravity.TOP or Gravity.START).apply { setMargins(dp(48), dp(32), 0, 0) })
+        root.addView(eyes, FrameLayout.LayoutParams(dp(320), dp(90), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { setMargins(0, dp(150), 0, 0) })
 
         hm = TextView(this).apply {
             setTextColor(Color.WHITE); setTextSize(TypedValue.COMPLEX_UNIT_SP, 48f)
@@ -95,10 +95,10 @@ class MainActivity : Activity() {
         timeRow.addView(hm)
         timeRow.addView(d1, LinearLayout.LayoutParams(dp(22), dp(34)).apply { leftMargin = dp(6); bottomMargin = dp(8) })
         timeRow.addView(d2, LinearLayout.LayoutParams(dp(22), dp(34)).apply { bottomMargin = dp(8) })
-        date = TextView(this).apply { setTextColor(0x99FFFFFF.toInt()); setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f); gravity = Gravity.END }
-        val clock = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; gravity = Gravity.END }
+        date = TextView(this).apply { setTextColor(0x99FFFFFF.toInt()); setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f); gravity = Gravity.START }
+        val clock = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; gravity = Gravity.START }
         clock.addView(timeRow); clock.addView(date, LinearLayout.LayoutParams(M, W))
-        root.addView(clock, FrameLayout.LayoutParams(W, W, Gravity.TOP or Gravity.END).apply { setMargins(0, dp(28), dp(48), 0) })
+        root.addView(clock, FrameLayout.LayoutParams(W, W, Gravity.TOP or Gravity.START).apply { setMargins(dp(48), dp(28), 0, 0) })
 
         row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_HORIZONTAL; clipChildren = false }
         val scroll = HorizontalScrollView(this).apply {
