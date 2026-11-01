@@ -151,7 +151,7 @@ class MainActivity : Activity() {
             isFocusable = true; isClickable = true; clipChildren = false
             setPadding(dp(16), 0, dp(16), 0)
         }
-        val icon = ImageView(this).apply { setImageDrawable(white(ri.loadIcon(pm))); alpha = 0.6f }
+        val icon = ImageView(this).apply { setImageDrawable(logoOnly(ri.loadIcon(pm))); alpha = 0.6f }
         val label = TextView(this).apply {
             text = ri.loadLabel(pm); setTextColor(Color.WHITE); setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
             alpha = 0f; gravity = Gravity.CENTER; maxLines = 1
